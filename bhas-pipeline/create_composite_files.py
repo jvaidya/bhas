@@ -202,57 +202,6 @@ def create_composite_document(title, text, imageUri):
     print(f"An error occurred: {error}")
     return None
   
-def create_composite_document_orig(title, text, imageUri):
-
-  try:
-    # create drive api client
-    service = get_docs_service()
-    
-    body = {
-        'title': title
-    }
-    doc = service.documents() \
-                 .create(body=body).execute()
-    documentId = doc.get('documentId')
-    print('Created document with title: {0} id: {1}'.format(doc.get('title'), documentId))
-
-
-    requests = [
-        {
-            'insertText': {
-                'location': {
-                    'index': 1,
-                },
-                'text': text + "\n"
-            }
-        },
-    ]
-
-    result = service.documents().batchUpdate(
-        documentId=documentId, body={'requests': requests}).execute()
-
-    startIndex = 1
-    requests = [{
-        'insertInlineImage': {
-            'location': {
-                'index': startIndex
-            },
-            'uri': imageUri
-        }
-    }]    
-
-    # Execute the request.
-    body = {'requests': requests}
-    response = service.documents().batchUpdate(
-        documentId=documentId, body=body).execute()
-    insert_inline_image_response = response.get('replies')[0].get(
-        'insertInlineImage')
-    print('Inserted image with object ID: {0}'.format(
-        insert_inline_image_response.get('objectId')))
-  except HttpError as error:
-    print(f"An error occurred: {error}")
-    return None
-
 def move_file_to_folder(file_id, folder_id):
   """Move specified file to the specified folder.
   Args:
