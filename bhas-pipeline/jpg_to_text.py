@@ -5,8 +5,9 @@ import os
 import pathlib
 from google.cloud import vision
 
+
 def jpgFileToTextFile(client, jpgFile, textFile):
-    
+
     # if jpgFile does not exist, return without doing anything
     if not os.path.exists(jpgFile):
         print(f"{jpgFile} does not exist, skipping")
@@ -30,17 +31,17 @@ def jpgFileToTextFile(client, jpgFile, textFile):
         return 0
 
     # Write text in textFile
-    f = open(textFile, "a")
-    f.write(response.full_text_annotation.text)
-    f.close()
+    with open(textFile, "a", encoding='utf-8') as f:
+        f.write(response.full_text_annotation.text)
 
     # return elapsed time in milliseconds
     return int((time.time() - start_time) * 1000)
 
+
 if len(sys.argv) == 1:
     print(f"Usage: {sys.argv[0]} <list of jpeg files or *.jpg for all>")
     sys.exit(1)
-    
+
 jpeg_files = sys.argv[1:]
 client = vision.ImageAnnotatorClient()
 for jpgFile in jpeg_files:
@@ -48,5 +49,3 @@ for jpgFile in jpeg_files:
     elapsed = jpgFileToTextFile(client, jpgFile, textFile)
     if elapsed:
         print(f"{jpgFile} -> {textFile} ({elapsed} ms)")
-    
-
