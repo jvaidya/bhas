@@ -1,0 +1,65 @@
+
+This code uses the following Google Services:
+
+Google Vision API
+Google Drive API
+Google Docs API
+
+These services run on Google Cloud.
+
+Google has good documentation about how to authenticate with the Google
+services and where to get the packages etc.
+
+Apart from Google services, it uses the pdf2image python package.
+
+The complete workflow is as follows:
+
+1. Scan the book into one or more pdf files.
+
+e,g, I scanned Sthalantar into:
+
+SthalantarCoverTo40-41.pdf
+Sthalantar42-43To80-81.pdf
+Sthalantar82-83To120-121.pdf
+Sthalantar122-123ToBackCover.pdf
+
+2. Run pdf_to_pages.py program on these pdf files to generate jpg files for all pages.
+
+e.g.I ran the following commands on these pdf files:
+
+python3 pdf_to_pages.py --first-actual-page 5 --bookname Sthalantar SthalantarCoverTo40-41.jpg
+
+python3 pdf_to_pages.py --first-actual-page 1 --first-page-number 42 --bookname Sthalantar Sthalantar42-43To80-81.pdf
+
+python3 pdf_to_pages.py --first-actual-page 1 --first-page-number 82 --bookname Sthalantar Sthalantar82-83To120-121.pdf
+
+python3 pdf_to_pages.py --first-actual-page 1 --first-page-number 122 --last-actual-page 144 --bookname Sthalantar Sthalantar122-123ToBackCover.pdf
+
+These commands generated the following files:
+
+Sthalantar_BEGIN_1.jpg to Sthalantar_BEGIN_4.jpg (The pages at the beginning of the book)
+Sthalantar_page_1.jpg to Sthalantar_page_144.jpg (The actual content of the book)
+Sthalantar_END_1.jpg to Sthalantar_END_3.jpg (The pages at the end of the book)
+
+3. Run jpg_to_text.py program on these jpg files to create the corresponding .txt files.
+
+e.g. Assume that all the jpg files are in a directory named Sthalantar
+
+cd Sthalantar
+python3 jpg_to_text.py *.jpg
+
+4. Run create_composite_files.py program on these jpg and text files to create Google Docs
+   files with jpeg and text both in them. This program acts on all .jpg .txt pairs it finds
+   in the directory you specify. It takes a fair amount of time to run.
+
+e.g. Assume that all the jpg files are in a directory named Sthalantar. 
+
+python3 create_composite_files.py Sthalantar
+
+5. TODO: Create an index document that lists and links to all page documents.
+
+6. TODO: Create a convention so that humans can indicate that they have approved a page.
+
+7. TODO: Write a program that first checks if all pages have been approved, and then collates
+   text from all approved pages into a single document.
+
