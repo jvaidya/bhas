@@ -12,9 +12,7 @@ def jpgFileToTextFile(client, jpgFile, textFile):
     if not os.path.exists(jpgFile):
         print(f"{jpgFile} does not exist, skipping")
         return 0
-    # If textFile already exists, delete it
-    if os.path.exists(textFile):
-        pathlib.Path.unlink(textFile)
+
     start_time = time.time()
 
     # Read image file
@@ -31,7 +29,7 @@ def jpgFileToTextFile(client, jpgFile, textFile):
         return 0
 
     # Write text in textFile
-    with open(textFile, "a", encoding='utf-8') as f:
+    with open(textFile, "w", encoding='utf-8') as f:
         f.write(response.full_text_annotation.text)
 
     # return elapsed time in milliseconds
