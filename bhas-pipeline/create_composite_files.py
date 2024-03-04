@@ -61,8 +61,13 @@ def get_creds():
 def read_existing_files():
     global EXISTING_FILES
     service = get_drive_service()
+    allFiles = []
     fileList = service.files().list().execute()
-    for f in fileList['files']:
+    allFiles.extend(fileList['files'])    
+    while ('nextPageToken' in fileList):
+        fileList = service.files().list(pageToken=fileList['nextPageToken']).execute()
+        allFiles.extend(fileList['files'])    
+    for f in allFiles:
         EXISTING_FILES[f['name']] = f['id']
 
 
@@ -264,6 +269,12 @@ def create_composite_files(bookDir):
     folderId = create_folder(bookName)
     jpgFiles = [f for f in os.listdir(bookDir) if f.endswith(".jpg")]
     for jpgFile in jpgFiles:
+        baseName = jpgFile.split(".")[0]
+        if baseName in EXISTING_FILES:
+            print(f"{baseName} already exists, skipping")
+            continue
+        else:
+            print(f"{baseName} is missing")
 
         # Upload jpeg file t drive
         fileId = upload_to_folder(folderId, os.path.join(bookDir, jpgFile))
@@ -271,7 +282,6 @@ def create_composite_files(bookDir):
         # Share the file
         share_file(fileId)
 
-        baseName = jpgFile.split(".")[0]
         txtFile = baseName + ".txt"
 
         # Make sure the corresponding txt file exists
