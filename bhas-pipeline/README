@@ -56,10 +56,19 @@ e.g. Assume that all the jpg files are in a directory named Sthalantar.
 
 python3 create_composite_files.py Sthalantar
 
-5. TODO: Create an index document that lists and links to all page documents.
+5. Once the individual files have been proof-read, run concat_docs.py program to concatenate
+   the text from the individual files into a single file:
 
-6. TODO: Create a convention so that humans can indicate that they have approved a page.
+   e.g. The individual pages for WanzoteecheGoodh are in the folder named WanzoteecheGoodh.
+   To concatenate pages 1 to 51 and create a file named WanzoteeheGoodh_pages_1_51, run the
+   follwing command:
+   
+   python3 concat_docs.py WanzoteecheGoodh 1 51
+   
+6. TODO: Create an index document that lists and links to all page documents.
 
-7. TODO: Write a program that first checks if all pages have been approved, and then collates
+7. TODO: Create a convention so that humans can indicate that they have approved a page.
+
+8. TODO: Modify concat_docs.py to first check if all pages have been approved, and then collates
    text from all approved pages into a single document.
 
